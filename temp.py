@@ -76,9 +76,7 @@ def save_img(media_url,file_name,file_path='pic'):
             #os.mkdir(file_path)
             os.makedirs(file_path)
         #attain the last word of pics
-
        
-
         file_suffix = os.path.splitext(media_url)[1]
         #full file name
         filename = '{}{}{}{}'.format(file_path,os.sep,file_name,file_suffix)
