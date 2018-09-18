@@ -134,8 +134,7 @@ if __name__ == '__main__':
         os.rename(src, dst) 
         i += 1
 '''
-
-
+#test
 #    media_url = get_all_tweets("@Ibra_official")
 #    save_img(media_url,file_name,file_path='pic')
 #    ffmpeg -r 1/5 -i img%03d.png -c:v libx264 -vf "fps=25,format=yuv420p" out.mp4
