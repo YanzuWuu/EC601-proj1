@@ -7,7 +7,7 @@ def detect_labels_uri(PATH):
     client = vision.ImageAnnotatorClient()
     image = vision.types.Image()
 
-    image.source.image_uri = uri
+    image.source.image_uri = PATH
 
     response = client.label_detection(image=image)
     labels = response.label_annotations
@@ -18,5 +18,5 @@ def detect_labels_uri(PATH):
     
 if __name__ == '__main__':
 
-#    PATH=os.getcwd()
-    detect_labels_uri(uri)
+    PATH=os.getcwd()
+    detect_labels_uri(PATH)
