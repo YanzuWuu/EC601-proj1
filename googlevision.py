@@ -1,13 +1,18 @@
+#!/usr/bin/env python
 import os
+import io
 from google.cloud import vision
 
-def detect_labels_uri(PATH):
-    """Detects labels in the file located in Google Cloud Storage or on the
-    Web."""
-    client = vision.ImageAnnotatorClient()
-    image = vision.types.Image()
 
-    image.source.image_uri = PATH
+    
+def detect_labels(path):
+    """Detects labels in the file."""
+    client = vision.ImageAnnotatorClient()
+
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+
+    image = vision.types.Image(content=content)
 
     response = client.label_detection(image=image)
     labels = response.label_annotations
@@ -15,8 +20,9 @@ def detect_labels_uri(PATH):
 
     for label in labels:
         print(label.description)
-    
+
+
 if __name__ == '__main__':
 
     PATH=os.getcwd()
-    detect_labels_uri(PATH)
+    detect_labels(PATH+"/01.jpg")
