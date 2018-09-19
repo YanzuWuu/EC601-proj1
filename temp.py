@@ -8,10 +8,14 @@ import tweepy #https://github.com/tweepy/tweepy
 #import urllib.request
 import os
 import wget
+#import subprocesss
 #import ffmpy
 #Twitter API credentials
 
-
+consumer_key = 'P0ZYeebu0IiZ2yXDkJYMKa4QN'
+consumer_secret = '1o8drgPRXHxks3FhGLeNJbMXjPf8p3GbE0ywbdlRS1kpGEU5LO'
+access_token = '1037401110389174272-6iC08TC3wyhtB3QE5lzaipeM18KYe7'
+access_secret = 'TkxumYnCOj8zepySPctzFeKvDS9SFx82gKVjS6evfOjMe'
 
 def get_all_tweets(screen_name):
         
@@ -98,16 +102,26 @@ def rename(PATH):
     total_num = len(filelist)
     i = 0
     for item in filelist:
+
         if item.endswith('.jpg'):
+                
+        
             src = os.path.join(os.path.abspath(PATH), item)
-            dst = os.path.join(os.path.abspath(PATH), str(i) + '.jpg')
+            if i<10:
+                dst = os.path.join(os.path.abspath(PATH), '0'+str(i) + '.jpg')
+            else:
+                dst = os.path.join(os.path.abspath(PATH), str(i) + '.jpg')
+            i=i+1
             try:
                 os.rename(src, dst)
-                print ('converting %s to %s ...' % (src, dst))
-                i = i + 1
+                print('converting %s to %s ...' % (src, dst))
             except:
+
                 continue
+           
+
     print ('total %d to rename & converted %d jpgs' % (total_num, i))
+
 
 
 if __name__ == '__main__':
@@ -117,10 +131,4 @@ if __name__ == '__main__':
     PATH=os.getcwd()
 #    self.path = '/home/ece-student/601Task1/newtask1/'
     rename(PATH)
-'''
-    i = 0
-      
-    for items in filelist(): 
-	if items endswith".jpg"
-        dst ="picture" + str(i) + ".jpg"
-        src ='newtask1'+ f
+    os.chdir(PATH)
