@@ -11,10 +11,7 @@ import wget
 #import ffmpy
 #Twitter API credentials
 
-consumer_key = 'P0ZYeebu0IiZ2yXDkJYMKa4QN'
-consumer_secret = '1o8drgPRXHxks3FhGLeNJbMXjPf8p3GbE0ywbdlRS1kpGEU5LO'
-access_token = '1037401110389174272-6iC08TC3wyhtB3QE5lzaipeM18KYe7'
-access_secret = 'TkxumYnCOj8zepySPctzFeKvDS9SFx82gKVjS6evfOjMe'
+
 
 def get_all_tweets(screen_name):
         
