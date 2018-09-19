@@ -123,15 +123,4 @@ if __name__ == '__main__':
     for items in filelist(): 
 	if items endswith".jpg"
         dst ="picture" + str(i) + ".jpg"
-        src ='newtask1'+ filename 
-        dst ='newtask1'+ dst 
-          
-        # rename() function will 
-        # rename all the files 
-        os.rename(src, dst) 
-        i += 1
-'''
-#test
-#    media_url = get_all_tweets("@Ibra_official")
-#    save_img(media_url,file_name,file_path='pic')
-#    ffmpeg -r 1/5 -i img%03d.png -c:v libx264 -vf "fps=25,format=yuv420p" out.mp4
+        src ='newtask1'+ f
