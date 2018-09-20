@@ -2,6 +2,7 @@
 import os
 import io
 from google.cloud import vision
+from google.cloud.vision import types
 
 
     
@@ -17,11 +18,13 @@ def detect_label():
 
     i=0
     while (i<num):
-        file_name = os.path.join(os.path.dirname(__file__),path+'/'+str(i)+'.jpg')
+        if(i < 10):
+            istr = "0"+str(i)
+        else:
+            istr = str(i)
+        file_name = os.path.join(os.path.dirname(__file__),path+'/'+istr+'.jpg')
         with io.open(file_name, 'rb') as image_file:
             content = image_file.read()
-        
-
         image = types.Image(content=content)
         response = client.label_detection(image=image)
         labels = response.label_annotations
@@ -33,5 +36,3 @@ if __name__ == '__main__':
 
     path=os.getcwd()
     detect_label()
-
-
