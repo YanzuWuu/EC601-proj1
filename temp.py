@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-#Author - Prateek Mehta
-
-
 import tweepy #https://github.com/tweepy/tweepy
 #import json
 #import urllib.request
