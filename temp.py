@@ -9,9 +9,10 @@ from google.cloud import vision
 from PIL import ImageDraw, Image, ImageFont
 from PIL import Image
 
-from all import client
+os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "MINI project1-79b07240c13f.json"
 
-def get_all_tweets(screen_name):
+
+def get_all_tweets(screen_name):A
         
         #Twitter only allows access to a users most recent 3240 tweets with this method
         consumer_key = ''
@@ -39,7 +40,6 @@ def get_all_tweets(screen_name):
             image=wget.download(url)
             os.rename(image, str(i) + '.jpg')
             i += 1
-    
 
 
 def rename(PATH):
@@ -92,3 +92,4 @@ if __name__ == '__main__':
     m=rename(PATH)
     get_label(m)
     conv_image()
+
