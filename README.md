@@ -10,5 +10,6 @@ As for the google vision API, some resources may be helpful:
 https://cloud.google.com/vision/docs/quickstart
 
 Finally, the json file is used for the data transformation during the pictures download process. I just left it here.
-##############################. update line  ################################
+####################################. update line  ###################################
+
 I combine the ffmpeg.sh command and googlevision.py into the main code: temp.py, and right now it can download images and have label on them, and create video at one time.
