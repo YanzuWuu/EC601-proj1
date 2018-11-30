@@ -121,7 +121,6 @@ def get_describe(m):
                 raw_image.save(file_name)
 
 
-
 if __name__ == '__main__':
     #pass in the username of the account you want to download
     get_all_tweets("hulu")
