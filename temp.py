@@ -11,7 +11,6 @@ from PIL import Image
 
 from all import client
 
-
 def get_all_tweets(screen_name):
         
         #Twitter only allows access to a users most recent 3240 tweets with this method
@@ -93,4 +92,3 @@ if __name__ == '__main__':
     m=rename(PATH)
     get_label(m)
     conv_image()
-
