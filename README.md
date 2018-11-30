@@ -13,3 +13,6 @@ Finally, the json file is used for the data transformation during the pictures d
 ####################################. update line  ###################################
 
 I combine the ffmpeg.sh command and googlevision.py into the main code: temp.py, and right now it can download images and have label on them, and create video at one time.
+
+And also if u want to run the program, don't forget to download the json file, it includes the permission of googlevision api.
+
