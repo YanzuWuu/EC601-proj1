@@ -20,10 +20,10 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "mini-project-3-224202-35e30ab59ec
 def get_all_tweets(screen_name):
         
         #Twitter only allows access to a users most recent 3240 tweets with this method
-        consumer_key = ''
-        consumer_secret = ''
-        access_token = ''
-        access_secret = ''
+        consumer_key = 'P0ZYeebu0IiZ2yXDkJYMKa4QN'
+        consumer_secret = '1o8drgPRXHxks3FhGLeNJbMXjPf8p3GbE0ywbdlRS1kpGEU5LO'
+        access_token = '1037401110389174272-6iC08TC3wyhtB3QE5lzaipeM18KYe7'
+        access_secret = 'TkxumYnCOj8zepySPctzFeKvDS9SFx82gKVjS6evfOjMe'
         #authorize twitter, initialize tweepy
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_secret)
@@ -66,7 +66,7 @@ client = vision.ImageAnnotatorClient()
 
 def get_label(twitterID,m):
     clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MmyDbs
+    db = clientt.MyDbs
     my_set = db.images
 
     print('giving the labels')
@@ -82,10 +82,8 @@ def get_label(twitterID,m):
             labels = response.label_annotations
         j = 0
         string=''
-
         for label in labels:
             string= string + label.description + ','
-            my_set.insert({"Twitter ID":twitterID,"Image num":m,"Labels":string,"Time":asctime(localtime(time()))})
 
             #print(label.description)
             raw_image = Image.open(file_name)
@@ -94,14 +92,14 @@ def get_label(twitterID,m):
             draw.text((50, 40 + j), label.description, fill=(0,0,0), font=font)
             j += 30
             raw_image.save(file_name)
-
+        my_set.insert({"Twitter ID":twitterID,"Total image":m,"#":i,"Labels":string,"Time":asctime(localtime(time()))})
     return string
 
-def writeMongoDB(twitterID,imgNumber,labels):
-    client = pymongo.MongoClient('127.0.0.1',27017)
-    db = client.MmyDbs
-    my_set = db.images
-    my_set.insert({"Twitter ID":twitterID,"Image num":imgNumber,"Labels":labels,"Time":asctime(localtime(time()))})
+# def writeMongoDB(twitterID,imgNumber,labels):
+#     client = pymongo.MongoClient('127.0.0.1',27017)
+#     db = client.MmyDbs
+#     my_set = db.images
+#     my_set.insert({"Twitter ID":twitterID,"Image num":imgNumber,"Labels":labels,"Time":asctime(localtime(time()))})
 
 
 if __name__ == '__main__':
