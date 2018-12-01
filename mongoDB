@@ -1,0 +1,119 @@
+#!/usr/bin/env python
+# encoding: utf-8
+import tweepy
+import os
+import wget
+import subprocess
+import io
+from google.cloud import vision
+from PIL import ImageDraw, Image, ImageFont
+from PIL import Image
+from time import time,localtime,asctime
+
+
+import pymongo
+from bson.objectid import ObjectId
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "mini-project-3-224202-35e30ab59ec6.json"
+
+
+def get_all_tweets(screen_name):
+        
+        #Twitter only allows access to a users most recent 3240 tweets with this method
+        consumer_key = 'P0ZYeebu0IiZ2yXDkJYMKa4QN'
+        consumer_secret = '1o8drgPRXHxks3FhGLeNJbMXjPf8p3GbE0ywbdlRS1kpGEU5LO'
+        access_token = '1037401110389174272-6iC08TC3wyhtB3QE5lzaipeM18KYe7'
+        access_secret = 'TkxumYnCOj8zepySPctzFeKvDS9SFx82gKVjS6evfOjMe'
+        #authorize twitter, initialize tweepy
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(access_token, access_secret)
+        api = tweepy.API(auth)
+        
+        #initialize a list to hold all the tweepy Tweets
+
+        #make initial request for most recent tweets (200 is the maximum allowed count)
+        Twitter_Page = api.user_timeline(screen_name, count=100)
+        Twitter_with_image=set()
+        print('Downloading the Image from '+ screen_name)
+        print('Processing.....')
+        for status in Twitter_Page:
+            media = status.entities.get('media', [])
+            if (len(media) > 0):
+                Twitter_with_image.add(media[0]['media_url'])
+        i=0
+        for url in Twitter_with_image:
+            image=wget.download(url)
+            os.rename(image, str(i) + '.jpg')
+            i += 1
+
+
+def rename(PATH):
+    filelist = os.listdir(PATH)
+    total_num = len(filelist)
+    m = 0
+    for item in filelist:
+
+        if item.endswith('.jpg'):
+            m=m+1
+    print ('total %d to rename & converted %d jpgs' % (total_num, m))
+    return m
+
+def conv_image():
+     print('Converting the images to video....Processing')
+     subprocess.call(['ffmpeg', '-r', '1', '-i', '%01d.jpg', '-vcodec', 'mpeg4','-y','movie.mp4'])
+client = vision.ImageAnnotatorClient()
+
+
+def get_label(twitterID,m):
+    clientt = pymongo.MongoClient('127.0.0.1',27017)
+    db = clientt.MmyDbs
+    my_set = db.images
+
+    print('giving the labels')
+    for i in range(m):
+        file_name = os.path.join(os.path.dirname(__file__), '%s.jpg'%(i))
+        with io.open(file_name, 'rb') as image_file:
+            content = image_file.read()
+
+            image = vision.types.Image(content=content)
+
+            response = client.label_detection(image=image)
+
+            labels = response.label_annotations
+        j = 0
+        string=''
+
+        for label in labels:
+            string= string + label.description + ','
+            my_set.insert({"Twitter ID":twitterID,"Image num":m,"Labels":string,"Time":asctime(localtime(time()))})
+
+            #print(label.description)
+            raw_image = Image.open(file_name)
+            draw = ImageDraw.Draw(raw_image)
+            font = ImageFont.truetype('/Library/Fonts/Times New Roman.ttf', 36)
+            draw.text((50, 40 + j), label.description, fill=(0,0,0), font=font)
+            j += 30
+            raw_image.save(file_name)
+
+    return string
+
+def writeMongoDB(twitterID,imgNumber,labels):
+    client = pymongo.MongoClient('127.0.0.1',27017)
+    db = client.MmyDbs
+    my_set = db.images
+    my_set.insert({"Twitter ID":twitterID,"Image num":imgNumber,"Labels":labels,"Time":asctime(localtime(time()))})
+
+
+if __name__ == '__main__':
+    #pass in the username of the account you want to download
+    get_all_tweets("hulu")
+    twitterID="hulu"
+#    __init__(self)
+    PATH=os.getcwd()
+#    self.path = '/home/ece-student/601Task1/newtask1/'
+    rename(PATH)
+    m=rename(PATH)
+    get_label(twitterID,m)
+    conv_image()
+#    labels= get_label(m)
+#    writeMongoDB("hulu",m,labels)
