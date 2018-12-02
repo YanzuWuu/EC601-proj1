@@ -4,7 +4,8 @@ The mini proj3 is based on the previous mini proj1, and can achieve most of the 
 Talk is cheap, show you the result lol.
 
 Main interface (menu):
-![menu](http://github.com/YanzuwuuEC601-proj1/raw/MINI-project-3/images1.png)
+
+![menu](http://github.com/YanzuwuuEC601-proj1/raw/MINI-project-3/images/1.png)
 
 
 
