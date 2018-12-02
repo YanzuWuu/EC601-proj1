@@ -16,8 +16,13 @@ from bson.objectid import ObjectId
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "mini-project-3-224202-35e30ab59ec6.json"
 
+def input_ID():
+    screen_name = input("Type the new Twitter ID:")
+    return screen_name
 
-def get_all_tweets():
+
+
+def get_all_tweets(screen_name):
         #Twitter only allows access to a users most recent 3240 tweets with this method
         consumer_key = ''
         consumer_secret = ''
@@ -28,10 +33,10 @@ def get_all_tweets():
         auth.set_access_token(access_token, access_secret)
         api = tweepy.API(auth)
 
-        screen_name = input("Type the new Twitter ID:")
+        #screen_name = input_ID()
 
         #make initial request for most recent tweets (200 is the maximum allowed count)
-        Twitter_Page = api.user_timeline(screen_name, count=50)
+        Twitter_Page = api.user_timeline(screen_name, count=20)
         Twitter_with_image=set()
         print('Downloading the Image from '+ screen_name + '.....')
         for status in Twitter_Page:
@@ -43,25 +48,27 @@ def get_all_tweets():
             image=wget.download(url)
             os.rename(image, str(i) + '.jpg')
             i += 1
-        return screen_name
 
-def rename(PATH):
-    filelist = os.listdir(PATH)
-    total_num = len(filelist)
-    m = 0
-    for item in filelist:
+        print ('total 20 twitters & renamed %d jpgs' % (i))
 
-        if item.endswith('.jpg'):
-            m=m+1
-    print ('total %d to rename & converted %d jpgs' % (total_num, m))
-    return m
+        return i
+
+# def rename(PATH):
+#     filelist = os.listdir(PATH)
+#     # total_num = len(filelist)
+#     m = 0
+#     for item in filelist:
+#
+#         if item.endswith('.jpg'):
+#             m=m+1
+#     print ('total 20 twitters & renamed %d jpgs' % (m))
+#     return m
 
 def conv_image():
      print('Converting the images to video....Processing')
      subprocess.call(['ffmpeg', '-r', '1', '-i', '%01d.jpg', '-vcodec', 'mpeg4','-y','video.mp4'])
+
 client = vision.ImageAnnotatorClient()
-
-
 
 def get_label(twitterID,m):
 
@@ -125,10 +132,10 @@ def user_interface():
         if ( x == 1):
             all_data()
 
-        if ( x == 2):
-            twitterID=get_all_tweets()
-            PATH=os.getcwd()
-            m=rename(PATH)
+        elif ( x == 2):
+            twitterID=input_ID()
+            #PATH=os.getcwd()
+            m=get_all_tweets(twitterID)
             get_label(twitterID,m)
 
         elif ( x == 3):
