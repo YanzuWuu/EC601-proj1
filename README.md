@@ -9,7 +9,7 @@ Main interface (menu):
 
 If I type a number doesn't belong to (0,8), or type a letter, it will return warning.
 
-![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/1.png)
+![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/11.png)
 
 Show the databse (type number 1):
 Here I have the twitterID, image number per feed, image id, image labels, and create time for every image.
