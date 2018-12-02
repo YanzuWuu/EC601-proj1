@@ -40,3 +40,4 @@ Coz I don't want to delete my database, let's just skip the "delete the databse"
 
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/9.png)
 
+The program stopped and won't turn back to the menu page automaticlly again.
