@@ -8,7 +8,7 @@ Main interface (menu):
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/1.png)
 
 Show the databse (type number 1):
-
+Here I have the twitterID, image number per feed, image id, image labels, and create time for every image.
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/2.png)
 
 Insert a set of new data (type number 2):
