@@ -7,6 +7,7 @@ Main interface (menu):
 
 ![menu](http://github.com/Yanzuwuu/EC601-proj1/images/1.png)
 
+![image](https://github.com/EC601-proj1/images/1.png)
 
-
+EC601-proj1/images/1.png
 
