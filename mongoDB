@@ -9,8 +9,10 @@ from google.cloud import vision
 from PIL import ImageDraw, Image, ImageFont
 from PIL import Image
 from time import time,localtime,asctime
-
+import numpy as np
 import pymongo
+from collections import Counter
+
 from bson.objectid import ObjectId
 
 
@@ -104,13 +106,8 @@ def get_label(twitterID,m):
         my_set.insert({"Twitter ID":twitterID,"Total image":m,"#":i,"Labels":string,"Time":asctime(localtime(time()))})
 
 
-    return string
+    #return labels
 
-# def writeMongoDB(twitterID,imgNumber,labels):
-#     client = pymongo.MongoClient('127.0.0.1',27017)
-#     db = client.MmyDbs
-#     my_set = db.images
-#     my_set.insert({"Twitter ID":twitterID,"Image num":imgNumber,"Labels":labels,"Time":asctime(localtime(time()))})
 
 def user_interface():
 
@@ -141,6 +138,12 @@ def user_interface():
         elif ( x == 3):
             delete_user()
 
+        elif ( x == 4):
+            search_keyword()
+
+        elif ( x == 5):
+            popular()
+
         elif ( x == 6):
             delete_database()
 
@@ -170,6 +173,48 @@ def delete_database():
     db = clientt.MyDbs
     db.command("dropDatabase")
 
+def search_keyword():
+
+    clientt = pymongo.MongoClient('127.0.0.1',27017)
+    db = clientt.MyDbs
+    my_set = db.images
+    twitterIDs=[]
+    word=input("Type the keyword u want to search: ")
+    for twitterID in my_set.find():
+        labels = twitterID.get('Labels')
+        label = labels.split(',')
+        if word in label:
+            x = twitterID.get('Twitter ID')
+            twitterIDs.append(x)
+
+
+    if twitterIDs == []:
+        print("There is no TitterID has the label (",word,") in their images.")
+    else:
+        print("These TitterID has the label (",word,") in their images:")
+        # ignore the same users
+        l = []
+        for i in twitterIDs:
+            if not i in l:
+                l.append(i)
+        print(l)
+
+def popular():
+
+    clientt = pymongo.MongoClient('127.0.0.1',27017)
+    db = clientt.MyDbs
+    my_set = db.images
+    label = []
+    for twitterID in my_set.find():
+        labels = twitterID.get('Labels')
+        x = labels.split(',')
+        label = np.append(x, label)
+
+    #print(label)
+    label_counts = Counter(label)
+    top_three = label_counts.most_common(4)
+    print("The top three popular labels are:\n",top_three[1:])
+    
 
 if __name__ == '__main__':
     #twitterID="hulu"
