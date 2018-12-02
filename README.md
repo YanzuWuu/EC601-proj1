@@ -7,12 +7,16 @@ Main interface (menu):
 
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/1.png)
 
+If I type a number doesn't belong to (0,8), or type a letter, it will return warning.
+
+![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/1.png)
+
 Show the databse (type number 1):
 Here I have the twitterID, image number per feed, image id, image labels, and create time for every image.
+
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/2.png)
 
 Insert a set of new data (type number 2):
-
 
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/3.png)
 
@@ -30,7 +34,13 @@ Now the ID "hulu" is deleted.
 
 Search the IDs who have the keyword (type4):
 
+If get result:
+
 ![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/7.png)
+
+If no result:
+
+![image](https://github.com/YanzuWuu/EC601-proj1/blob/MINI-project-3/images/10.png)
 
 Get the most popular 3 labels (type 5):
 
