@@ -10,13 +10,33 @@ from PIL import ImageDraw, Image, ImageFont
 from PIL import Image
 from time import time,localtime,asctime
 import numpy as np
-import pymongo
 from collections import Counter
 
 from bson.objectid import ObjectId
 
+import pymysql
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "mini-project-3-224202-35e30ab59ec6.json"
+# def Create_base():
+#     db = pymysql.connect(host='localhost',user='root', password='', port=3306)
+#     cursor = db.cursor()
+#     cursor.execute('SELECT VERSION()')
+#     data = cursor.fetchone()
+#     print('Database version:', data)
+#     cursor.execute("CREATE DATABASE IF NOT EXISTS  Mini_Project3 DEFAULT CHARACTER SET utf8")
+#
+#     db.close()
+#
+# ##---------------Create Table---------------##
+# def Create_table():
+#     db = pymysql.connect(host='localhost', user='root', password='', port=3306, db='Mini_Project3')
+#     cursor = db.cursor()
+#     sql = 'CREATE TABLE IF NOT EXISTS Tweepy_Data (ID VARCHAR(255) NOT NULL, Twitter_ID VARCHAR(255) NOT NULL, Amount INT NOT NULL,' \
+#           ' Descrition VARCHAR(255) NOT NULL,  PRIMARY KEY (id))'
+#     cursor.execute(sql)
+#     db.close()
+
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS']= "My First Project-cb4eb253ff69.json"
 
 def input_ID():
     screen_name = input("Type the new Twitter ID:")
@@ -26,10 +46,10 @@ def input_ID():
 
 def get_all_tweets(screen_name):
         #Twitter only allows access to a users most recent 3240 tweets with this method
-        consumer_key = ''
-        consumer_secret = ''
-        access_token = ''
-        access_secret = ''
+        consumer_key = 'P0ZYeebu0IiZ2yXDkJYMKa4QN'
+        consumer_secret = '1o8drgPRXHxks3FhGLeNJbMXjPf8p3GbE0ywbdlRS1kpGEU5LO'
+        access_token = '1037401110389174272-6iC08TC3wyhtB3QE5lzaipeM18KYe7'
+        access_secret = 'TkxumYnCOj8zepySPctzFeKvDS9SFx82gKVjS6evfOjMe'
         #authorize twitter, initialize tweepy
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_secret)
@@ -72,15 +92,18 @@ def conv_image():
 
 client = vision.ImageAnnotatorClient()
 
-def get_label(twitterID,m):
-
-    clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MyDbs
-    my_set = db.images
-
+def get_label(twitter_ID,m):
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
+    cursor.execute("use MyDbs")
+    # user = input('Enter the username to Insert')
+    time1 = asctime(localtime(time()))
     print('giving the labels')
     print('It will take some seconds...')
 
+    idd = ''
+    idddd = idd+twitter_ID
+    time11 = time1 + idd
     for i in range(m):
         file_name = os.path.join(os.path.dirname(__file__), '%s.jpg'%(i))
         with io.open(file_name, 'rb') as image_file:
@@ -103,10 +126,30 @@ def get_label(twitterID,m):
             draw.text((50, 40 + j), label.description, fill=(0,0,0), font=font)
             j += 30
             raw_image.save(file_name)
-        my_set.insert({"Twitter ID":twitterID,"Total image":m,"#":i,"Labels":string,"Time":asctime(localtime(time()))})
+
+
+        #sql = 'INSERT INTO twitter VALUES(%s,%d,%d,%s,%s)' % (twitter_ID, m, i, string, time)
+        sql = 'INSERT INTO twitter (Twitter_ID, Total_image, image_ID, labels, Time) VALUES(%s,%s,%s,%s,%s)'
+        VALUES = (idddd, m, i, string, time11)
+
+        try:
+            cursor.execute(sql,VALUES)
+            db.commit()
+            print('Successful updating')
+        except:
+            print('Updating failed!')
+            db.rollback()
+        # cursor.close()
 
 
     #return labels
+
+def Create_table():
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
+    sql = 'CREATE TABLE IF NOT EXISTS twitter (Twitter_ID VARCHAR(255) NOT NULL, Total_image INT NOT NULL, image_ID INT NOT NULL, labels VARCHAR(255) NOT NULL, Time VARCHAR(255) NOT NULL)'
+    cursor.execute(sql)
+    db.close()
 
 
 def user_interface():
@@ -130,10 +173,12 @@ def user_interface():
             all_data()
 
         elif ( x == 2):
-            twitterID=input_ID()
+            #Create_table()
+            twitter_ID=input_ID()
+
             #PATH=os.getcwd()
-            m=get_all_tweets(twitterID)
-            get_label(twitterID,m)
+            m=get_all_tweets(twitter_ID)
+            get_label(twitter_ID,m)
 
         elif ( x == 3):
             delete_user()
@@ -151,65 +196,71 @@ def user_interface():
             return
 
 def all_data():
-    clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MyDbs
-    #print(db.images.find().pretty())
-    cur=db.images.find()
-    for doc in cur:
-        print(doc)
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM twitter')
+    results= cursor.fetchall()
+    db.commit()
+    for user in results:
+        print(user)
 
 def delete_user():
 
-    clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MyDbs
-    my_set = db.images
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
 
     delete_name = input("Delete the Twitter ID:")
-    my_set.delete_many({ "Twitter ID" : delete_name })
+    sql="DELETE FROM twitter WHERE Twitter_ID='%s'" % (delete_name)
+    #print(delete_name)
+    cursor.execute(sql)
+    db.commit()
+
 
 def delete_database():
-
-    clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MyDbs
-    db.command("dropDatabase")
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
+    cursor.execute("truncate twitter;")
+    return
 
 def search_keyword():
 
-    clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MyDbs
-    my_set = db.images
-    twitterIDs=[]
-    word=input("Type the keyword u want to search: ")
-    for twitterID in my_set.find():
-        labels = twitterID.get('Labels')
-        label = labels.split(',')
-        if word in label:
-            x = twitterID.get('Twitter ID')
-            twitterIDs.append(x)
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
 
 
-    if twitterIDs == []:
+    word = input("Type the keyword u want to search: ")
+    cursor.execute(("SELECT * FROM twitter"))
+    result = cursor.fetchall()
+    twitter_IDs=[]
+    for user in result:
+        desc = user[3]
+        desc = desc.split(',')
+        if word in desc:
+            twitter_IDs.append((user[0]))
+
+    if twitter_IDs == []:
         print("There is no TitterID has the label (",word,") in their images.")
     else:
         print("These TitterID has the label (",word,") in their images:")
         # ignore the same users
         l = []
-        for i in twitterIDs:
+        for i in twitter_IDs:
             if not i in l:
                 l.append(i)
         print(l)
 
 def popular():
 
-    clientt = pymongo.MongoClient('127.0.0.1',27017)
-    db = clientt.MyDbs
-    my_set = db.images
-    label = []
-    for twitterID in my_set.find():
-        labels = twitterID.get('Labels')
-        x = labels.split(',')
-        label = np.append(x, label)
+    db = pymysql.connect(host='localhost', user='root', password='Zyc19960127', port=3306, db='MyDbs')
+    cursor = db.cursor()
+    cursor.execute(("SELECT * FROM twitter"))
+    result = cursor.fetchall()
 
+    label = []
+    for user in result:
+        desc = user[3]
+        desc = desc.split(',')
+        label = np.append(desc, label)
     #print(label)
     label_counts = Counter(label)
     top_three = label_counts.most_common(4)
@@ -217,15 +268,5 @@ def popular():
 
 
 if __name__ == '__main__':
-    #twitterID="hulu"
-    #get_all_tweets()
-    # PATH=os.getcwd()
-    # rename(PATH)
-    # m=rename(PATH)
-    # get_label(twitterID,m)
-    # conv_image()
+
     user_interface()
-
-
-
-
